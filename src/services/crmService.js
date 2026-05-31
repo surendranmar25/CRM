@@ -207,7 +207,7 @@ export const crmService = {
   // ─── USERS ────────────────────────────────────────────────────────────────
   async getUsers() {
     try {
-      const { data, error } = await supabase.from('users').select('id,name,username,role,created_at');
+      const { data, error } = await supabase.from('users').select('id,name,username,role,password,created_at');
       if (error) throw error;
       return data || [];
     } catch (error) {
