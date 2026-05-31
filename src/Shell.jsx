@@ -149,11 +149,17 @@ export function Shell({user,users,onLogout,onUsersChange,T,dark,onToggleDark,the
   const [showNotifs, setShowNotifs] = useState(false);
   const [showCSVImport, setShowCSVImport] = useState(false);
   const [showGlobalSearch, setShowGlobalSearch] = useState(false);
+  const [shellTasks, setShellTasks] = useState([]);
   const [recentlyViewed, setRecentlyViewed] = useState(() => { try { return JSON.parse(localStorage.getItem("ek_recent")||"[]"); } catch { return []; } });
 
   useEffect(()=>{
     const fetch=async()=>{try{const data=await crmService.getAllFunnels();setFunnels(data);}catch(err){console.error(err);}finally{setLoading(false);}};
     fetch();
+  },[]);
+
+  // Load tasks once at shell level so GlobalSearch can use them
+  useEffect(()=>{
+    crmService.getAllTasks().then(data=>setShellTasks(data||[])).catch(()=>{});
   },[]);
 
   useEffect(()=>{
@@ -621,26 +627,18 @@ return true;
       </div>
 
       {/* ── MOBILE BOTTOM NAV ── */}
-      <nav className="ek-bottom-nav" style={{background:T.surface,borderTop:`1px solid ${T.line}`,boxShadow:"0 -8px 32px rgba(0,0,0,0.1)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",position:"relative"}}>
-        {/* 5 fixed items — Add button only on Funnels view */}
+      <nav className="ek-bottom-nav" style={{background:T.surface,borderTop:`1px solid ${T.line}`,boxShadow:"0 -8px 32px rgba(0,0,0,0.1)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)"}}>
+        {/* Home */}
         {[
-          {id:"dashboard", label:"Home",    icon:P.dash},
-          {id:"funnels",   label:"Funnels", icon:P.list},
-          {id:"tasks",     label:"Tasks",   icon:P.check},
-          {id:"chat",      label:"Chat",    icon:P.msg},
-          {id:"analytics", label:"Charts",  icon:P.chart},
+          {id:"dashboard", label:"Home",   icon:P.dash},
+          {id:"funnels",   label:"Leads",  icon:P.list},
         ].map(item => {
           const a = view === item.id;
           return (
-            <button key={item.id} onClick={() => setView(item.id)}
-              className={`ek-bottom-nav-item${a ? " active" : ""}`}
-              style={{padding:"8px 6px 6px", transition:"all .18s"}}>
-              <div style={{
-                width:32, height:32, borderRadius:10,
-                background: a ? T.brandSubtle : "transparent",
-                display:"flex", alignItems:"center", justifyContent:"center",
-                transition:"all .18s", transform: a ? "scale(1.05)" : "scale(1)",
-              }}>
+            <button key={item.id} onClick={()=>setView(item.id)}
+              className={`ek-bottom-nav-item${a?" active":""}`}
+              style={{padding:"8px 6px 6px",transition:"all .18s"}}>
+              <div style={{width:32,height:32,borderRadius:10,background:a?T.brandSubtle:"transparent",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .18s"}}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d={item.icon} stroke={a?T.brand:T.inkMuted} strokeWidth={a?"2.2":"1.6"} strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -649,24 +647,57 @@ return true;
             </button>
           );
         })}
-        {/* Add button — only in Funnels view, floating above nav */}
-        {view === "funnels" && can(user,"create") && (
-          <button onClick={() => setAddOpen(true)}
+
+        {/* Centre: Add on Funnels, Tasks elsewhere */}
+        {view==="funnels" && can(user,"create") ? (
+          <button onClick={()=>setAddOpen(true)}
             className="ek-bottom-nav-item"
-            style={{padding:0, flex:"0 0 auto", position:"absolute", left:"50%", transform:"translateX(-50%) translateY(-14px)"}}>
+            style={{padding:0,flex:"1 1 auto",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:0}}>
             <div style={{
-              width:50, height:50, borderRadius:18,
-              background:`linear-gradient(135deg, ${T.brand}, ${T.brandHover})`,
-              display:"flex", alignItems:"center", justifyContent:"center",
-              boxShadow:`0 6px 20px ${T.brand}55`,
-              border:`3px solid ${T.surface}`,
+              width:48,height:48,borderRadius:16,
+              background:`linear-gradient(135deg,${T.brand},${T.brandHover})`,
+              display:"flex",alignItems:"center",justifyContent:"center",
+              boxShadow:`0 4px 16px ${T.brand}55`,
+              marginBottom:2,
             }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path d={P.plus} stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
               </svg>
             </div>
+            <span className="ek-bottom-nav-label" style={{color:T.brand,fontWeight:800}}>Add</span>
+          </button>
+        ) : (
+          <button onClick={()=>setView("tasks")}
+            className={`ek-bottom-nav-item${view==="tasks"?" active":""}`}
+            style={{padding:"8px 6px 6px",transition:"all .18s"}}>
+            <div style={{width:32,height:32,borderRadius:10,background:view==="tasks"?T.brandSubtle:"transparent",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .18s"}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d={P.check} stroke={view==="tasks"?T.brand:T.inkMuted} strokeWidth={view==="tasks"?"2.2":"1.6"} strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <span className="ek-bottom-nav-label" style={{color:view==="tasks"?T.brand:T.inkMuted,fontWeight:view==="tasks"?800:600}}>Tasks</span>
           </button>
         )}
+
+        {/* Chat + Charts */}
+        {[
+          {id:"chat",      label:"Chat",   icon:P.msg},
+          {id:"analytics", label:"Charts", icon:P.chart},
+        ].map(item => {
+          const a = view === item.id;
+          return (
+            <button key={item.id} onClick={()=>setView(item.id)}
+              className={`ek-bottom-nav-item${a?" active":""}`}
+              style={{padding:"8px 6px 6px",transition:"all .18s"}}>
+              <div style={{width:32,height:32,borderRadius:10,background:a?T.brandSubtle:"transparent",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .18s"}}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d={item.icon} stroke={a?T.brand:T.inkMuted} strokeWidth={a?"2.2":"1.6"} strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="ek-bottom-nav-label" style={{color:a?T.brand:T.inkMuted,fontWeight:a?800:600}}>{item.label}</span>
+            </button>
+          );
+        })}
       </nav>
 
       {bulkEditOpen&&selectedFunnels.length>0&&(
@@ -675,7 +706,7 @@ return true;
         </Suspense>
       )}
       {showNotifs&&<NotificationCenter funnels={scoped} user={user} onView={f=>{trackView(f);setShowNotifs(false);}} onClose={()=>setShowNotifs(false)} T={T}/>}
-      {showGlobalSearch&&<GlobalSearch funnels={scoped} onClose={()=>setShowGlobalSearch(false)} onViewLead={f=>{trackView(f);setShowGlobalSearch(false);}} onNavigate={v=>{setView(v);setShowGlobalSearch(false);}} T={T}/>}
+      {showGlobalSearch&&<GlobalSearch funnels={scoped} tasks={shellTasks} onClose={()=>setShowGlobalSearch(false)} onViewLead={f=>{trackView(f);setShowGlobalSearch(false);}} onNavigate={v=>{setView(v);setShowGlobalSearch(false);}} T={T}/>}
       {showCSVImport&&(
         <Suspense fallback={null}>
           <CSVImportModal onClose={()=>setShowCSVImport(false)} onImport={handleCSVImport} users={users} user={user} T={T}/>

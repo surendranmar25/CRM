@@ -81,6 +81,7 @@ export function GlobalSearch({ funnels, tasks = [], onClose, onViewLead, onNavig
 
   return (
     <div
+      className="ek-global-search"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         position: "fixed", inset: 0, zIndex: 8000,

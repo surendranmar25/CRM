@@ -234,7 +234,7 @@ export function Calendar({ funnels, user, onView, T }) {
       </div>
 
       {/* Side panel: selected day leads */}
-      <div style={{
+      <div className="ek-calendar-panel" style={{
         width: selected ? 320 : 0,
         transition: "width .22s cubic-bezier(0.4,0,0.2,1)",
         overflow: "hidden", borderLeft: `1px solid ${T.line}`,

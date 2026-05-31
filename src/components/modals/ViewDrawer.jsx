@@ -397,7 +397,7 @@ export function ViewDrawer({
       <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 9000, display: "flex", justifyContent: "flex-end", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} onClick={onClose}>
 
         {/* ── PANEL ── */}
-        <div style={{ background: T.surface, width: "100%", maxWidth: "min(600px,100vw)", height: "100%", display: "flex", flexDirection: "column", boxShadow: "-16px 0 56px rgba(0,0,0,.28)", animation: "slideRight .22s cubic-bezier(0.4,0,0.2,1)" }} className="ek-drawer" onClick={e => e.stopPropagation()}>
+        <div style={{ background: T.surface, width: "100%", maxWidth: "min(600px,100vw)", height: "100%", display: "flex", flexDirection: "column", boxShadow: "-16px 0 56px rgba(0,0,0,.28)", animation: "slideRight .22s cubic-bezier(0.4,0,0.2,1)", overflowY: "hidden" }} className="ek-drawer ek-view-drawer" onClick={e => e.stopPropagation()}>
 
           {/* ─── STICKY HEADER ─── */}
           <div style={{ padding: "clamp(12px,3vw,18px) clamp(14px,4vw,22px) 0", borderBottom: `1px solid ${T.line}`, background: T.surface, flexShrink: 0, position: "sticky", top: 0, zIndex: 10 }}>

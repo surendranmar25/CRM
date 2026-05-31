@@ -156,7 +156,7 @@ export function InvoiceModal({ funnel, onClose, T }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 7000, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: F }}>
-      <div style={{ background: T.surface, borderRadius: 16, border: `1px solid ${T.lineMid}`, width: "min(580px, 100%)", maxHeight: "90vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 80px rgba(0,0,0,0.22)" }}>
+      <div className="ek-invoice-modal" style={{ background: T.surface, borderRadius: 16, border: `1px solid ${T.lineMid}`, width: "min(580px, 100%)", maxHeight: "90vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 24px 80px rgba(0,0,0,0.22)" }}>
 
         {/* Header */}
         <div style={{ background: `linear-gradient(135deg, ${T.brand}, ${T.brandHover})`, padding: "18px 22px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>

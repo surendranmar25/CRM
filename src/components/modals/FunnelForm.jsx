@@ -132,6 +132,7 @@ export function FunnelForm({ onClose, onSave, existing, user, users = [], T }) {
     >
       <div
         onClick={e => e.stopPropagation()}
+        className="ek-funnel-form"
         style={{
           background: T.surface, borderRadius:16,
           width:"100%", maxWidth:"min(720px,100vw)",
