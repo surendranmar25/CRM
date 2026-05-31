@@ -1,0 +1,122 @@
+/* ── GLOBAL RESETS ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── TOUCH DEVICE OPTIMIZATIONS ────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+/* ── MOBILE INPUT ZOOM FIX (iOS) ─────────────────────────── */
+@media (max-width: 768px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  .ek-login-left        { display: none  !important; }
+  .ek-login-mobile-logo { display: flex  !important; }
+}
+
+@media (min-width: 769px) {
+  .ek-login-left        { display: flex  !important; }
+  .ek-login-mobile-logo { display: none  !important; }
+}
+
+/* ── TABLET BREAKPOINT (769px – 1024px) ──────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .ek-kpi-grid              { grid-template-columns: repeat(2, 1fr) !important; }
+  .ek-analytics-stat-row    { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .ek-analytics-chart-grid  { grid-template-columns: 1fr !important; }
+  .ek-dash-grid             { grid-template-columns: 1fr !important; }
+  .ek-team-grid             { grid-template-columns: 1fr !important; }
+  .ek-stats-row1            { grid-template-columns: repeat(2, 1fr) !important; }
+  .ek-stats-row2            { grid-template-columns: repeat(2, 1fr) !important; }
+  .ek-sidebar               { width: 64px !important; }
+}
+
+/* ── SMALL MOBILE (≤ 480px) ──────────────────────────────── */
+@media (max-width: 480px) {
+  .ek-analytics-stat-row { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+  .ek-kpi-grid            { grid-template-columns: 1fr 1fr !important; gap: 8px  !important; }
+}
+
+/* ── SMOOTH SCROLL ────────────────────────────────────────── */
+.ek-page-content,
+.ek-table-scroll,
+.ek-filter-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── PRINT STYLES ─────────────────────────────────────────── */
+@media print {
+  .ek-sidebar,
+  .ek-topbar,
+  .ek-bottom-nav,
+  .ek-bulk-bar,
+  .ek-funnel-toolbar,
+  .ek-filter-scroll,
+  button {
+    display: none !important;
+  }
+  .ek-page-content {
+    overflow: visible !important;
+    height: auto !important;
+    padding: 0 !important;
+  }
+  .ek-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  body { background: #fff !important; color: #000 !important; }
+}
+
+/* ── REDUCED MOTION ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── FOCUS RING ───────────────────────────────────────────── */
+:focus:not(:focus-visible) { outline: none; }
+
+/* ── PREVENT CONTENT OVERFLOW ─────────────────────────────── */
+img, video, svg, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── TABLE BASE ───────────────────────────────────────────── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* ── OVERFLOW TEXT ────────────────────────────────────────── */
+.ek-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
